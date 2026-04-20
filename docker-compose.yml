@@ -1,0 +1,90 @@
+version: '3.3'
+
+services:
+  server:
+    image: finance_api
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        RAILS_VERSION: 8.1.2
+    entrypoint: docker-entrypoint.sh server
+    depends_on:
+      - postgres
+    volumes:
+      - ./:/app
+      - ./log:/log
+    env_file:
+      - .env
+    ports:
+      - '3000:3000'
+
+  test:
+    image: finance_api
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        RAILS_VERSION: 8.1.2
+    entrypoint: docker-entrypoint.sh test
+    depends_on:
+      - postgres
+    volumes:
+      - ./:/app
+      - ./log:/log
+    env_file:
+      - .env.test
+
+  rails_console:
+    image: finance_api
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        RAILS_VERSION: 8.1.2
+    entrypoint: docker-entrypoint.sh rails_console
+    depends_on:
+      - postgres
+    volumes:
+      - ./:/app
+      - ./log:/log
+    env_file:
+      - .env
+
+  bash:
+    image: finance_api
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        RAILS_VERSION: 8.1.2
+    entrypoint: docker-entrypoint.sh bash
+    depends_on:
+      - postgres
+    volumes:
+      - ./:/app
+      - ./log:/log
+    env_file:
+      - .env
+    environment:
+      HISTFILE: /app/docker/dotfiles/.bash_history
+      IRB_HISTFILE: /app/docker/dotfiles/.irb_history
+      IRBRC: /app/docker/dotfiles/.irbrc
+
+  postgres:
+    image: postgres:16-alpine
+    hostname: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    logging:
+      options:
+        max-size: 10m
+        max-file: '3'
+    ports:
+      - '5438:5432'
+
+volumes:
+  pgdata:

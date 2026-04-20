@@ -1,0 +1,363 @@
+---
+openapi: 3.0.1
+info:
+  title: Finance API V1
+  version: v1
+  description: API para controle de finanças pessoais
+paths:
+  "/api/v1/accounts":
+    get:
+      summary: list accounts
+      tags:
+      - Accounts
+      security:
+      - Bearer: []
+      description: Lista as contas do usuário autenticado
+      parameters:
+      - name: Authorization
+        in: header
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ok
+    post:
+      summary: create account
+      tags:
+      - Accounts
+      security:
+      - Bearer: []
+      description: Cria uma nova conta para o usuário autenticado
+      parameters:
+      - name: Authorization
+        in: header
+        schema:
+          type: string
+      responses:
+        '201':
+          description: created
+        '422':
+          description: unprocessable entity
+      requestBody:
+        content:
+          application/vnd.api+json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      example: accounts
+                    attributes:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          example: Conta Corrente
+                        account_type:
+                          type: string
+                          example: checking
+                        balance:
+                          type: number
+                          example: 1000.0
+                        currency:
+                          type: string
+                          example: BRL
+                      required:
+                      - name
+                      - account_type
+                  required:
+                  - type
+                  - attributes
+              required:
+              - data
+  "/api/v1/accounts/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: id
+      required: true
+      schema:
+        type: string
+    - name: Authorization
+      in: header
+      schema:
+        type: string
+    get:
+      summary: show account
+      tags:
+      - Accounts
+      security:
+      - Bearer: []
+      responses:
+        '200':
+          description: ok
+        '403':
+          description: forbidden
+        '404':
+          description: not found
+    patch:
+      summary: update account
+      tags:
+      - Accounts
+      security:
+      - Bearer: []
+      parameters: []
+      responses:
+        '200':
+          description: ok
+      requestBody:
+        content:
+          application/vnd.api+json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      example: accounts
+                    attributes:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          example: Nome Atualizado
+    delete:
+      summary: delete account
+      tags:
+      - Accounts
+      security:
+      - Bearer: []
+      responses:
+        '204':
+          description: no content
+  "/api/v1/categories":
+    get:
+      summary: list categories
+      tags:
+      - Categories
+      security:
+      - Bearer: []
+      description: Lista as categorias do usuário autenticado
+      parameters:
+      - name: Authorization
+        in: header
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ok
+    post:
+      summary: create category
+      tags:
+      - Categories
+      security:
+      - Bearer: []
+      description: Cria uma nova categoria para o usuário autenticado
+      parameters:
+      - name: Authorization
+        in: header
+        schema:
+          type: string
+      responses:
+        '201':
+          description: created
+        '422':
+          description: unprocessable entity
+      requestBody:
+        content:
+          application/vnd.api+json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      example: categories
+                    attributes:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          example: Alimentação
+                        category_type:
+                          type: string
+                          example: expense
+                        color:
+                          type: string
+                          example: "#FF5733"
+                        icon_name:
+                          type: string
+                          example: fast-food
+                      required:
+                      - name
+                      - category_type
+                  required:
+                  - type
+                  - attributes
+              required:
+              - data
+  "/api/v1/categories/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: id
+      required: true
+      schema:
+        type: string
+    - name: Authorization
+      in: header
+      schema:
+        type: string
+    get:
+      summary: show category
+      tags:
+      - Categories
+      security:
+      - Bearer: []
+      responses:
+        '200':
+          description: ok
+        '403':
+          description: forbidden
+    patch:
+      summary: update category
+      tags:
+      - Categories
+      security:
+      - Bearer: []
+      parameters: []
+      responses:
+        '200':
+          description: ok
+      requestBody:
+        content:
+          application/vnd.api+json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      example: categories
+                    attributes:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          example: Novo Nome
+    delete:
+      summary: delete category
+      tags:
+      - Categories
+      security:
+      - Bearer: []
+      responses:
+        '204':
+          description: no content
+  "/api/v1/login":
+    post:
+      summary: create session
+      tags:
+      - Sessions
+      description: Autentica um usuário e retorna um token JWT
+      parameters: []
+      responses:
+        '200':
+          description: ok
+        '401':
+          description: unauthorized
+      requestBody:
+        content:
+          application/vnd.api+json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      example: sessions
+                    attributes:
+                      type: object
+                      properties:
+                        email:
+                          type: string
+                          example: user@example.com
+                        password:
+                          type: string
+                          example: password123
+                      required:
+                      - email
+                      - password
+                  required:
+                  - type
+                  - attributes
+              required:
+              - data
+  "/api/v1/users":
+    post:
+      summary: create user
+      tags:
+      - Users
+      description: Cria um novo usuário e retorna um token de acesso
+      parameters: []
+      responses:
+        '201':
+          description: created
+        '422':
+          description: unprocessable entity
+        '415':
+          description: unsupported media type
+      requestBody:
+        content:
+          application/vnd.api+json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      example: users
+                    attributes:
+                      type: object
+                      properties:
+                        email:
+                          type: string
+                          example: user@example.com
+                        password:
+                          type: string
+                          example: password123
+                        password_confirmation:
+                          type: string
+                          example: password123
+                      required:
+                      - email
+                      - password
+                      - password_confirmation
+                  required:
+                  - type
+                  - attributes
+              required:
+              - data
+servers:
+- url: http://localhost:3000
+  description: Local development server
+components:
+  securitySchemes:
+    Bearer:
+      description: JWT Token
+      type: apiKey
+      name: Authorization
+      in: header
