@@ -3,6 +3,7 @@ class User < ApplicationRecord
 
   has_many :accounts, dependent: :destroy
   has_many :categories, dependent: :destroy
+  has_many :transactions, dependent: :destroy
 
   validates :email, presence: true, uniqueness: true
   validates :password, length: { minimum: 6 }, if: -> { new_record? || !password.nil? }

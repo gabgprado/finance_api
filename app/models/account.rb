@@ -1,5 +1,6 @@
 class Account < ApplicationRecord
   belongs_to :user
+  has_many :transactions, dependent: :destroy
 
   ACCOUNT_TYPES = %w[checking savings credit investment].freeze
 

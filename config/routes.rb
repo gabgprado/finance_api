@@ -16,6 +16,7 @@ Rails.application.routes.draw do
       post 'login', to: 'sessions#create'
       resources :accounts
       resources :categories
+      resources :transactions
     end
   end
 end
